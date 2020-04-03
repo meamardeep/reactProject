@@ -1,4 +1,4 @@
-//prod.js - don't commit this file
+//prod.js - commit this file
 
 module.exports={
     googleClientID: process.env.GOOGLE_CLIENT_ID,
