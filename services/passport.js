@@ -22,23 +22,42 @@ passport.use(new GoogleStrategy({
     callbackURL:'/auth/google/callback',
     proxy: true
 },
-(accessToken,refreshToken,profile,done)=>{
-    User.findOne({googleId:profile.id}).then((existingUser) => {
-            if(existingUser){
-                // Already a record present
-                //console.log('already exists record!');
-                done(null, existingUser);
-            }else{
+    async (accessToken,refreshToken,profile,done) => {
+        const existingUser = await User.findOne({googleId:profile.id});
+
+        if(existingUser)
+        {
+            // Already a record present
+            //console.log('already exists record!');
+            done(null, existingUser);
+        }
+        else
+        {
                 //add new user record
                 //new User({ googleId: profile.id }).save();
                 //console.log('googleId' + profile.id + 'saved to database');
-                new User({ googleId: profile.id })
-                    .save()
-                    .then(user => done(null, user));
-            }
-        })
+                const user = await new User({ googleId: profile.id }).save();
+                done(null, user);
+        }
     }
 ));
     // console.log('accessToken : ', accessToken);
     // console.log('refreshToken: ', refreshToken);
     //console.log('googleId :', profile.id);
+
+    // (accessToken,refreshToken,profile,done)=>{
+    //     User.findOne({googleId:profile.id}).then((existingUser) => {
+    //             if(existingUser){
+    //                 // Already a record present
+    //                 //console.log('already exists record!');
+    //                 done(null, existingUser);
+    //             }else{
+    //                 //add new user record
+    //                 //new User({ googleId: profile.id }).save();
+    //                 //console.log('googleId' + profile.id + 'saved to database');
+    //                 new User({ googleId: profile.id })
+    //                     .save()
+    //                     .then(user => done(null, user));
+    //             }
+    //         })
+    //     }
